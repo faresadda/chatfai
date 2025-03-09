@@ -11,8 +11,7 @@ import { FaStopCircle } from "react-icons/fa";
 
 var data;
 async function api(message) {
-  const api_key =
-    "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";
+  const api_key ="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";
   const api_url = "https://openrouter.ai/api/v1/chat/completions";
   const res = await fetch(api_url, {
     method: "POST",
@@ -81,7 +80,7 @@ export default function Ai({ answers, setAnswers }) {
   const [stop, setStop] = useState(false);
   return (
     <div className="flex">
-      <div className={`h-[100vh] fixed flex flex-col items-center gap-5 py-5 transition-[width] duration-1000 ${menu ? "w-[250px] max-[420px]:w-[200px]" : "w-[70px] max-[420px]:w-[50px]"} 
+      <div className={`h-screen fixed flex flex-col items-center gap-5 py-5 transition-[width] duration-1000 ${menu ? "w-[250px] max-[420px]:w-[200px]" : "w-[70px] max-[420px]:w-[50px]"} 
       z-10 ${dark ? "bg-[rgb(20,20,20)] text-white" : "bg-[rgb(210,210,210)] text-black"} max-[420px]:${menu ? "w-[200px]" : "w-[50px]"}`}>
         <div className="flex items-center gap-10">
           <TiThMenu className="text-2xl" onClick={() => {setMenu(!menu);setSearchicon(false);}}/>
@@ -157,7 +156,7 @@ export default function Ai({ answers, setAnswers }) {
       </div>
 
       <div
-        className={`flex flex-col gap-10 justify-center items-center min-h-[100vh] absolute right-0 py-10 ${menu ? "w-[calc(100%-250px)]" : "w-[calc(100%-70px)]"} 
+        className={`flex flex-col gap-10 justify-center items-center min-h-screen absolute right-0 py-10 ${menu ? "w-[calc(100%-250px)]" : "w-[calc(100%-70px)]"} 
           ${dark ? "bg-[rgb(30,30,30)] text-white" : "bg-[rgb(240,240,240)] text-black"} transition-[width] duration-1000 max-[650px]:w-[calc(100%-70px)] max-[420px]:w-[calc(100%-50px)]`}>
         <div
           className={`flex items-center gap-2 fixed top-0 right-0 pl-5 py-5 ${dark ? "bg-[rgb(30,30,30)] text-white" : "bg-[rgb(240,240,240)] text-black" } max-[350px]:pl-2
