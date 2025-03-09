@@ -1,0 +1,239 @@
+import { IoSend } from "react-icons/io5";
+import { useEffect, useRef, useState } from "react";
+import { TbMessagePlus } from "react-icons/tb";
+import { TiThMenu } from "react-icons/ti";
+import { MdDarkMode } from "react-icons/md";
+import { MdLightMode } from "react-icons/md";
+import { FaUserPlus } from "react-icons/fa6";
+import { IoSearch } from "react-icons/io5";
+import logo from "../../public/logo.jpg";
+import { FaStopCircle } from "react-icons/fa";
+
+var data;
+async function api(message) {
+  const api_key =
+    "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";
+  const api_url = "https://openrouter.ai/api/v1/chat/completions";
+  const res = await fetch(api_url, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${api_key}`,
+      "HTTP-Referer": "<YOUR_SITE_URL>", // Optional. Site URL for rankings on openrouter.ai.
+      "X-Title": "<YOUR_SITE_NAME>", // Optional. Site title for rankings on openrouter.ai.
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: "qwen/qwq-32b:free",
+      messages: [
+        {
+          role: "user",
+          content: message,
+        },
+      ],
+    }),
+  });
+  data = await res.json();
+  console.log(data);
+}
+export default function Ai({ answers, setAnswers }) {
+  const [input, setInput] = useState("");
+  const [qst, setQst] = useState(false);
+  const [menu, setMenu] = useState(false);
+  const [dark, setDark] = useState(true);
+  const [i, setI] = useState(0);
+  const [searchicon, setSearchicon] = useState(false);
+  const [searchinput, setSearchinput] = useState("");
+
+  const [copy, setCopy] = useState(() => {
+    const savecopy = localStorage.getItem("copy");
+    return savecopy ? JSON.parse(savecopy) : [];});
+  useEffect(() => {
+      localStorage.setItem("copy", JSON.stringify(copy));
+    }, [copy]);
+
+  window.onload = () => {
+    setAnswers([]);
+  };
+
+  const intervalId=useRef(null);
+  function write() {
+    const message = data.choices[0].message.content;
+    let currentIndex = 0;
+    intervalId.current = setInterval(() => {
+      setAnswers((up) =>
+        up.map((ans) =>
+          ans === up[up.length - 1]
+            ? { ...ans, ai: message.slice(0, currentIndex) }
+            : ans
+        )
+      );
+      currentIndex++;
+      if (currentIndex > message.length) {
+        clearInterval(intervalId.current);
+        setStop(false);
+      }
+    }, 50);
+  }
+  const ref = useRef(null);
+  useEffect(() => {
+    ref.current?.scrollIntoView({ behavior: "smooth" });
+  }, [answers]);
+  const [stop, setStop] = useState(false);
+  return (
+    <div className="flex">
+      <div className={`h-[100vh] fixed flex flex-col items-center gap-5 py-5 transition-[width] duration-1000 ${menu ? "w-[250px] max-[420px]:w-[200px]" : "w-[70px] max-[420px]:w-[50px]"} 
+      z-10 ${dark ? "bg-[rgb(20,20,20)] text-white" : "bg-[rgb(210,210,210)] text-black"} max-[420px]:${menu ? "w-[200px]" : "w-[50px]"}`}>
+        <div className="flex items-center gap-10">
+          <TiThMenu className="text-2xl" onClick={() => {setMenu(!menu);setSearchicon(false);}}/>
+          {menu && (<IoSearch className="text-2xl" onClick={() => {setSearchicon(!searchicon);}}/>)}
+        </div>
+        {searchicon && (
+          <input type="search" placeholder="search" value={searchinput} 
+            onChange={(e) => {
+              setSearchinput(() => {
+                const si = e.target.value;
+                setCopy(answers.filter((ans) => ans.user.includes(si)));
+                return si;});}}
+            className={`outline-none rounded-[10px] py-2 px-5 w-[90%] 
+              ${dark ? "bg-white placeholder:text-black text-black" : "bg-black placeholder:text-white text-white"}`}/>
+        )}
+        <div onClick={() => {setAnswers([]);setQst(false);}} className="flex items-center gap-5 cursor-pointer">
+          <TbMessagePlus className="text-2xl" />{menu && <p>new chat</p>}
+        </div>
+        {!dark && (
+          <div
+            className="flex items-center gap-5 cursor-pointer"
+            onClick={() => {
+              setDark(true);
+            }}
+          >
+            <MdDarkMode className="text-2xl" />
+            {menu && <p>dark mode</p>}
+          </div>
+        )}
+        {dark && (
+          <div
+            className="flex items-center gap-5 cursor-pointer"
+            onClick={() => {
+              setDark(false);
+            }}
+          >
+            <MdLightMode className="text-2xl" />
+            {menu && <p>light mode</p>}
+          </div>
+        )}
+        {menu && copy.length > 0 && (
+          <button
+            onClick={() => {
+              setCopy([]);
+            }}
+            className={`rounded-[10px] py-2 px-5 w-[90%] ${dark ? "bg-white text-black" : "bg-black text-white"}`}>
+            Delete
+          </button>
+        )}
+        {menu && <div className="flex flex-col justify-center items-center overflow-auto w-full gap-5">
+            {copy.length>0 && copy.map((co, index) => (
+              <p
+                key={index}
+                className="px-2 text-center cursor-pointer"
+                onClick={() => {
+                  setAnswers([
+                    ...answers,
+                    { id: co.id, user: co.user, ai: co.ai },
+                  ]);
+                  setQst(true);
+                }}
+              >
+                {co.user.length > 30 ? co.user.slice(0, 30) + " ..." : co.user}
+              </p>
+            ))}
+        </div>}
+        <div
+          className={`flex items-center justify-center gap-5 absolute bottom-0 cursor-pointer py-5 w-full
+            ${dark ? "bg-[rgb(20,20,20)] text-white" : "bg-[rgb(210,210,210)] text-black"}`}>
+          <FaUserPlus className="text-2xl" />
+          {menu && <p>sign up | login</p>}
+        </div>
+      </div>
+
+      <div
+        className={`flex flex-col gap-10 justify-center items-center min-h-[100vh] absolute right-0 py-10 ${menu ? "w-[calc(100%-250px)]" : "w-[calc(100%-70px)]"} 
+          ${dark ? "bg-[rgb(30,30,30)] text-white" : "bg-[rgb(240,240,240)] text-black"} transition-[width] duration-1000 max-[650px]:w-[calc(100%-70px)] max-[420px]:w-[calc(100%-50px)]`}>
+        <div
+          className={`flex items-center gap-2 fixed top-0 right-0 pl-5 py-5 ${dark ? "bg-[rgb(30,30,30)] text-white" : "bg-[rgb(240,240,240)] text-black" } max-[350px]:pl-2
+            ${menu ? "w-[calc(100%-250px)] duration-1000 transition-[width] max-[420px]:w-[calc(100%-200px)]" : "w-[calc(100%-70px)] duration-1000 transition-[width] max-[420px]:w-[calc(100%-50px)]"}`}>
+          <h1 className="font-bold text-2xl tracking-[4px] max-[800px]:text-xl max-[500px]:text-xs">CHATFAI</h1>
+          <img src={logo} className="rounded-[50%] w-6" />
+        </div>
+        {!qst && (
+          <h1 className="text-6xl font-bold tracking-[8px] max-[800px]:text-5xl max-[500px]:text-3xl text-center">ASK CHATFAI</h1>
+        )}
+        {!qst && <h2>How can I help you today !</h2>}
+        <div className="w-[60%] pb-50 pt-5 flex flex-col gap-10 max-[800px]:w-[80%] max-[500px]:w-[90%]">
+          {answers.map((ans, index) => {
+            return (
+              <div key={index} className="flex flex-col gap-10">
+                <p
+                  className={`w-fit max-w-[50%] text-start p-2 rounded-2xl ${!dark ? "bg-black text-white" : "bg-white text-black"}`}
+                >
+                  {ans.user}
+                </p>
+                <p className="w-[100%] text-end" ref={ref}>
+                  {ans.ai}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+        <div className={`fixed bottom-0 right-0 ${dark ? "bg-[rgb(30,30,30)]" : "bg-[rgb(240,240,240)]"} max-[650px]:w-[calc(100%-70px)]!  max-[420px]:w-[calc(100%-50px)]!
+                        ${qst ? "h-[200px] transition-[height] duration-1000" : "h-[350px] transition-[height] duration-1000"}
+                        ${menu ? "w-[calc(100%-250px)] duration-1000 transition-[width]" : "w-[calc(100%-70px)] duration-1000 transition-[width]"}
+                        max-[420px]:${menu ? "w-[calc(100%-200px)]" : "w-[calc(100%-50px)]"}`}>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+            }}
+            className={`p-5! rounded-2xl w-[60%] absolute top-10 left-[50%] translate-x-[-50%] max-[800px]:w-[80%] max-[500px]:w-[90%]
+            ${dark ? "bg-[rgb(45,45,45)] text-white" : "bg-[rgb(220,220,220)] text-black"}`}>
+            <input
+              type="text"
+              placeholder="ASK CHATFAI"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              className={`outline-none mb-10 w-full ${dark ? "placeholder:text-white" : "placeholder:text-black"}`}/>
+            <div className="flex items-center justify-end gap-5 text-2xl">
+              {stop && (
+                <FaStopCircle
+                  onClick={() => {
+                    clearInterval(intervalId.current);
+                    setStop(false)
+                  }}
+                />
+              )}
+              <button
+                type="submit"
+                onClick={async () => {
+                  setInput("");
+                  setQst(true);
+                  setAnswers(up=> [...up, { id: i, user: input }]);
+                  setI((up) => up + 1);
+                  await api(input);
+                  setAnswers((up) =>
+                    up.map((ans) => {
+                      return ans.id === i ? { ...ans, ai: data.choices[0].message.content } : ans }));
+                  setCopy([...copy,{id:i,user:input,ai: data.choices[0].message.content}])
+                  setStop(true);
+                  write();
+                  window.scrollTo({ bottom: 0, behavior: "smooth" });
+                }}
+              >
+                <IoSend />
+              </button>
+            </div>
+          </form>
+          <p className="absolute bottom-1 text-center w-full">&copy;2025 All rights reserved to chatfai</p>
+        </div>
+      </div>
+    </div>
+  );
+}
