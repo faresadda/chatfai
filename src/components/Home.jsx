@@ -1,4 +1,4 @@
-import logo from "../../public/logo.jpg";
+import logo from "../../public/logo.png";
 import { Link} from "react-router-dom";
 export default function Home({setAnswers}) {
   return (

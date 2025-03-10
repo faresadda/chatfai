@@ -4,14 +4,27 @@ import { TbMessagePlus } from "react-icons/tb";
 import { TiThMenu } from "react-icons/ti";
 import { MdDarkMode } from "react-icons/md";
 import { MdLightMode } from "react-icons/md";
-import { FaUserPlus } from "react-icons/fa6";
 import { IoSearch } from "react-icons/io5";
-import logo from "../../public/logo.jpg";
+import { FaUserPlus } from "react-icons/fa";
+import logo from "../../public/logo.png";
 import { FaStopCircle } from "react-icons/fa";
+import ReactMarkdown from 'react-markdown';
+import rehypeHighlight from 'rehype-highlight';
+import 'highlight.js/styles/github.css'
+
+const MarkdownRenderer = ({ text,className}) => {
+  return (
+    <div className={className}>
+    <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
+      {text}
+    </ReactMarkdown>
+    </div>
+  );
+};
 
 var data;
 async function api(message) {
-  const api_key ="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";
+  const api_key ="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";
   const api_url = "https://openrouter.ai/api/v1/chat/completions";
   const res = await fetch(api_url, {
     method: "POST",
@@ -78,6 +91,7 @@ export default function Ai({ answers, setAnswers }) {
     ref.current?.scrollIntoView({ behavior: "smooth" });
   }, [answers]);
   const [stop, setStop] = useState(false);
+  const [load,setLoad]=useState(false)
   return (
     <div className="flex">
       <div className={`h-screen fixed flex flex-col items-center gap-5 py-5 transition-[width] duration-1000 ${menu ? "w-[250px] max-[420px]:w-[200px]" : "w-[70px] max-[420px]:w-[50px]"} 
@@ -162,27 +176,22 @@ export default function Ai({ answers, setAnswers }) {
           className={`flex items-center gap-2 fixed top-0 right-0 pl-5 py-5 ${dark ? "bg-[rgb(30,30,30)] text-white" : "bg-[rgb(240,240,240)] text-black" } max-[350px]:pl-2
             ${menu ? "w-[calc(100%-250px)] duration-1000 transition-[width] max-[420px]:w-[calc(100%-200px)]" : "w-[calc(100%-70px)] duration-1000 transition-[width] max-[420px]:w-[calc(100%-50px)]"}`}>
           <h1 className="font-bold text-2xl tracking-[4px] max-[800px]:text-xl max-[500px]:text-xs">CHATFAI</h1>
-          <img src={logo} className="rounded-[50%] w-6" />
+          <img src={logo} className="w-6 max-[500px]:w-4" />
         </div>
         {!qst && (
           <h1 className="text-6xl font-bold tracking-[8px] max-[800px]:text-5xl max-[500px]:text-3xl text-center">ASK CHATFAI</h1>
         )}
         {!qst && <h2>How can I help you today !</h2>}
-        <div className="w-[60%] pb-50 pt-5 flex flex-col gap-10 max-[800px]:w-[80%] max-[500px]:w-[90%]">
+        <div className="w-[60%] pb-50 pt-15 flex flex-col gap-10 max-[800px]:w-[80%] max-[500px]:w-[90%]">
           {answers.map((ans, index) => {
             return (
               <div key={index} className="flex flex-col gap-10">
-                <p
-                  className={`w-fit max-w-[50%] text-start p-2 rounded-2xl ${!dark ? "bg-black text-white" : "bg-white text-black"}`}
-                >
-                  {ans.user}
-                </p>
-                <p className="w-[100%] text-end" ref={ref}>
-                  {ans.ai}
-                </p>
+                <p className={`w-fit max-w-[50%] text-start p-2 rounded-2xl ${!dark ? "bg-black text-white" : "bg-white text-black"}`}>{ans.user}</p>
+                <MarkdownRenderer className="w-[100%] text-end" text={ans.ai} />
               </div>
             );
           })}
+          {load && <div className="load" ref={ref}></div>}
         </div>
         <div className={`fixed bottom-0 right-0 ${dark ? "bg-[rgb(30,30,30)]" : "bg-[rgb(240,240,240)]"} max-[650px]:w-[calc(100%-70px)]!  max-[420px]:w-[calc(100%-50px)]!
                         ${qst ? "h-[200px] transition-[height] duration-1000" : "h-[350px] transition-[height] duration-1000"}
@@ -212,17 +221,20 @@ export default function Ai({ answers, setAnswers }) {
               <button
                 type="submit"
                 onClick={async () => {
-                  setInput("");
-                  setQst(true);
-                  setAnswers(up=> [...up, { id: i, user: input }]);
-                  setI((up) => up + 1);
-                  await api(input);
-                  setAnswers((up) =>
-                    up.map((ans) => {
-                      return ans.id === i ? { ...ans, ai: data.choices[0].message.content } : ans }));
-                  setCopy([...copy,{id:i,user:input,ai: data.choices[0].message.content}])
-                  setStop(true);
-                  write();
+                  if (input!==''){
+                      setInput("");
+                      setQst(true);
+                      setAnswers(up=> [...up, { id: i, user:input} ]);
+                      setI((up) => up + 1);
+                      setLoad(true)
+                      await api(input);
+                      setLoad(false)
+                      setAnswers((up) => up.map((ans) => {
+                          return ans.id === i ? { ...ans, ai: data.choices[0].message.content } : ans }));
+                      setCopy([...copy,{id:i,user:input,ai: data.choices[0].message.content}])
+                      setStop(true);
+                      write();
+                  }
                   window.scrollTo({ bottom: 0, behavior: "smooth" });
                 }}
               >
