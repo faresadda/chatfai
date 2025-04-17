@@ -22,5 +22,6 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.13.2",
     "nodemailer": "^6.10.1"
-  }
+  },
+  "type": "commonjs"
 }
