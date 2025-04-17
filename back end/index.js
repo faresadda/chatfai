@@ -16,18 +16,19 @@ app.all('*',(req,res,next)=>{
 app.use(errorMiddleware)
 app.use(apikeyMiddleware)
 
-const path = require('path');
-// ... باقي الإعدادات والروترات
+import path from 'path'
+import { fileURLToPath } from 'url'
 
-// Serve static files from the frontend
-app.use(express.static(path.join(__dirname, 'client')));
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
-// Fallback to index.html for any unmatched route (important for React Router)
+app.use(express.static(path.join(__dirname, 'dist')))
+
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client', 'index.html'));
-});
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'))
+})
 
 
 app.listen(process.env.PORT,()=>{
-    console.log('listenning on port ',process.env.port)
+    console.log('listenning on port ',process.env.PORT)
 })
