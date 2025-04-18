@@ -14,11 +14,12 @@ export default function Confirm({ confirm,setConfirm,render,setRender }) {
   const [err,setErr]=useState([])
   const updateProfile = async () => {
     try {
-      const res = await fetch(`http://localhost:5982/api/chatfai/profile/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/chatfai/profile/${id}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
+          "x-api-key":import.meta.env.VITE_MY_API_KEY,
         },
         body: JSON.stringify({
           name:name,
@@ -40,11 +41,12 @@ export default function Confirm({ confirm,setConfirm,render,setRender }) {
   };
   const deleteUser = async () => {
     try {
-      const res = await fetch(`http://localhost:5982/api/chatfai/profile/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/chatfai/profile/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
+          "x-api-key":import.meta.env.VITE_MY_API_KEY,
         },
       });
 
@@ -61,11 +63,12 @@ export default function Confirm({ confirm,setConfirm,render,setRender }) {
   };
   const updatePassword = async () => {
     try {
-      const res = await fetch(`http://localhost:5982/api/chatfai/security/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/chatfai/security/${id}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
+          "x-api-key":import.meta.env.VITE_MY_API_KEY,
         },
         body: JSON.stringify({
           oldpassword:password1,

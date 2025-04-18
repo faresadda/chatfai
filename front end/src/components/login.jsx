@@ -17,11 +17,11 @@ const Login = () => {
 
   const registre = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/registre`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/chatfai/registre`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key":import.meta.env.VITE_MY_API_KEY
+          "x-api-key":import.meta.env.VITE_MY_API_KEY,
         },
         body: JSON.stringify({
           name:name,
@@ -55,11 +55,11 @@ const Login = () => {
   
   const login = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/login`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/chatfai/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key":import.meta.env.VITE_MY_API_KEY
+          "x-api-key":import.meta.env.VITE_MY_API_KEY,
         },
         body: JSON.stringify({
           email: email,
@@ -110,11 +110,11 @@ const Login = () => {
   const verifyEmail = async () => {
     const code=otp.join('')
     try {
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/verify/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/chatfai/verify/${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key":import.meta.env.VITE_MY_API_KEY
+          "x-api-key":import.meta.env.VITE_MY_API_KEY,
         },
         body: JSON.stringify({
           code:code,
@@ -145,11 +145,11 @@ const Login = () => {
   const [verify,setVerify]=useState(true)
   const accountRecovery = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/accountRecovery`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/chatfai/accountRecovery`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key":import.meta.env.VITE_MY_API_KEY
+          "x-api-key":import.meta.env.VITE_MY_API_KEY,
         },
         body: JSON.stringify({
           email:email
@@ -176,11 +176,11 @@ const Login = () => {
   const verifyAccount = async () => {
     const code=otp.join('')
     try {
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/verify/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/chatfai/verify/${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key":import.meta.env.VITE_MY_API_KEY
+          "x-api-key":import.meta.env.VITE_MY_API_KEY,
         },
         body: JSON.stringify({
           code:code,
@@ -210,11 +210,11 @@ const Login = () => {
   const newPassword = async () => {
     if(password1==password2){
     try {
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/passwordRecovery/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/chatfai/passwordRecovery/${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key":import.meta.env.VITE_MY_API_KEY
+          "x-api-key":import.meta.env.VITE_MY_API_KEY,
         },
         body: JSON.stringify({
           password:password1
@@ -242,7 +242,7 @@ const Login = () => {
   };
   const resendCode = async () => {
     try {
-      await fetch(`${import.meta.env.VITE_BASE_URL}/resendCode/${id}`, {
+      await fetch(`${import.meta.env.VITE_BASE_URL}/api/chatfai/resendCode/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

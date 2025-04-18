@@ -196,8 +196,9 @@ export default function Ai({ answers, setAnswers,render,setRender }) {
             onClick={() => {
               navigate("/login");
             }}
-            className={`flex items-center justify-center gap-5 fixed bottom-0 cursor-pointer py-5 w-full
-            ${dark ? "bg-[rgb(20,20,20)] text-white" : "bg-[rgb(210,210,210)] text-black"} transition-[width] duration-1000 ${menu ? "w-[250px] max-[420px]:w-[200px]": "w-[70px] max-[420px]:w-[50px]"}`}>
+            className={`flex items-center justify-center gap-5 fixed bottom-0 cursor-pointer py-5
+            ${dark ? "bg-[rgb(20,20,20)] text-white" : "bg-[rgb(210,210,210)] text-black"} transition-[width] duration-1000 
+            ${menu ? "w-[250px] max-[420px]:w-[200px]": "w-[70px] max-[420px]:w-[50px]"}`}>
             <FaUserPlus className="text-2xl" />
             {menu && <p>sign up | login</p>}
           </div>

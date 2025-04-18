@@ -21,11 +21,12 @@ export default function App() {
   const [fetchUser, setFetchUser] = useState(false);
   const getUser = async () => {
     try {
-      const res = await fetch(`http://localhost:5982/api/chatfai/profile/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/chatfai/profile/${id}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
+          "x-api-key":import.meta.env.VITE_MY_API_KEY,
         },
       });
 
