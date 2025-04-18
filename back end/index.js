@@ -25,6 +25,10 @@ app.get('*', (req, res) => {
 app.all('*',(req,res,next)=>{
   return res.status(404).json(appError.createError(404,'not found'))})
 
+  
+  console.log("Env Key:", `"${process.env.MY_API_KEY}"`);
+  
+
 app.listen(process.env.PORT,()=>{
     console.log('listenning on port ',process.env.PORT)
 })

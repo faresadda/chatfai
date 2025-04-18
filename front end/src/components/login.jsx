@@ -419,7 +419,7 @@ const Login = () => {
         <button type="submit"
               className="w-[80%] bg-black text-white py-2 rounded-lg font-medium hover:opacity-90 transition mt-5">Enter</button>
         </form>}
-      {state==='newPassword' && <form className=" bg-gray-100 flex flex-col items-center justify-center gap-5 rounded-2xl w-150 p-10"
+      {state==='newPassword' && <form className=" bg-gray-100 flex flex-col items-center justify-center gap-5 rounded-2xl w-150 p-10 max-[650px]:w-[90%]"
            onSubmit={(e)=>{e.preventDefault();newPassword()}}>
         <p>Account recovery</p>
         <input type='password' required placeholder="New password" className="flex-1 outline-none border border-gray-300 rounded-lg px-3 py-2 w-[80%]"
