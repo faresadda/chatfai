@@ -8,12 +8,7 @@ const appError=require('./utils/appError')
 const cors=require('cors')
 const apikeyMiddleware = require('./middlewares/apikeyMiddleware')
 
-app.use(cors({
-  origin: "https://chatfai.onrender.com",
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "x-api-key"],
-}));
+app.use(cors());
 app.use(express.json())
 
 app.use(apikeyMiddleware)
