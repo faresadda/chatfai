@@ -21,7 +21,7 @@ export default function App() {
   const [fetchUser, setFetchUser] = useState(false);
   const getUser = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/chatfai/profile/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/profile/${id}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,

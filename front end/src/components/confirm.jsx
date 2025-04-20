@@ -14,7 +14,7 @@ export default function Confirm({ confirm,setConfirm,render,setRender }) {
   const [err,setErr]=useState([])
   const updateProfile = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/chatfai/profile/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/profile/${id}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -42,7 +42,7 @@ export default function Confirm({ confirm,setConfirm,render,setRender }) {
   };
   const deleteUser = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/chatfai/profile/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/profile/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -64,7 +64,7 @@ export default function Confirm({ confirm,setConfirm,render,setRender }) {
   };
   const updatePassword = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/chatfai/security/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/security/${id}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,

@@ -17,7 +17,7 @@ const Login = () => {
 
   const registre = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/chatfai/registre`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/registre`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,7 +55,7 @@ const Login = () => {
   
   const login = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/chatfai/login`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -110,7 +110,7 @@ const Login = () => {
   const verifyEmail = async () => {
     const code=otp.join('')
     try {
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/chatfai/verify/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/verify/${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -145,7 +145,7 @@ const Login = () => {
   const [verify,setVerify]=useState(true)
   const accountRecovery = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/chatfai/accountRecovery`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/accountRecovery`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -176,7 +176,7 @@ const Login = () => {
   const verifyAccount = async () => {
     const code=otp.join('')
     try {
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/chatfai/verify/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/verify/${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -210,7 +210,7 @@ const Login = () => {
   const newPassword = async () => {
     if(password1==password2){
     try {
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/chatfai/passwordRecovery/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/passwordRecovery/${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -242,7 +242,7 @@ const Login = () => {
   };
   const resendCode = async () => {
     try {
-      await fetch(`${import.meta.env.VITE_BASE_URL}/api/chatfai/resendCode/${id}`, {
+      await fetch(`${import.meta.env.VITE_BASE_URL}/resendCode/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
