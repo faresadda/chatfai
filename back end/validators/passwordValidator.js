@@ -6,8 +6,8 @@ const passwordValidator = [
     .isLength({ min: 8 })
     .withMessage("password is too short")
     .custom(value => {
-      if (!/^[A-Z]/.test(value)) {
-        throw new Error('Password must start with an uppercase letter');
+      if (!/[A-Z]/.test(value)) {
+        throw new Error('Password must contain with an uppercase letter');
       }
       if (!/\d/.test(value)) {
         throw new Error('Password must contain at least one number');

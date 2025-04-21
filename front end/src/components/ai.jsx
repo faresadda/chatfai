@@ -123,7 +123,7 @@ export default function Ai({ answers, setAnswers,render,setRender,confirm,setCon
         className={`h-screen fixed flex flex-col items-center gap-5 py-5 transition-[width] duration-1000 ${menu ? "w-[250px] max-[420px]:w-[200px]": "w-[70px] max-[420px]:w-[50px]"} 
       z-10 ${dark ? "bg-[rgb(20,20,20)] text-white":"bg-[rgb(221,221,221)] text-black"} p-5`}>
         <div className={`flex items-center ${menu ? 'justify-between' : 'justify-center'} w-full`}>
-          {menu && <p className="text-[rgb(102,224,255)]">Fares Adda</p>}
+          {menu && <p className={`${dark ? 'text-[rgb(118,227,254)]' : 'text-[rgb(51,151,176)]'} text-[10px] font-extrabold`}>FARES<br/>ADDA</p>}
           <div className="flex items-center gap-5 cursor-pointer">
             <TiThMenu className="text-2xl" onClick={() => {setMenu(!menu);}}/>
             {token && menu && copy.length > 0 && <IoSearch className="text-2xl" onClick={()=>{setSearchIcon(true)}}/>}
@@ -163,7 +163,8 @@ export default function Ai({ answers, setAnswers,render,setRender,confirm,setCon
               copy.map((c, index) => (
                 <p
                   key={index}
-                  className={`${dark ? 'hover:bg-[rgb(105,105,105)]' : 'hover:bg-[rgb(238,238,238)]'} w-full hover:px-3 py-3 rounded-lg flex items-start gap-3`}
+                  className={`${dark ? 'hover:bg-[rgb(105,105,105)]' : 'hover:bg-[rgb(238,238,238)]'} w-full hover:px-3
+                   py-3 rounded-lg flex items-start gap-3`}
                   onClick={() => {
                     setAnswers([...answers,{ id: c.id, user: c.user, ai: c.ai },]);
                     setQst(true);}}>
@@ -177,15 +178,15 @@ export default function Ai({ answers, setAnswers,render,setRender,confirm,setCon
             onClick={() => {
               navigate("/login");
             }}
-            className={`flex items-center ${menu ? 'justify-start' : 'justify-center'} gap-5 fixed bottom-0 cursor-pointer py-5
-            ${dark ? "bg-[rgb(20,20,20)] text-white" : "bg-[rgb(210,210,210)] text-black"} transition-[width] duration-1000 
+            className={`flex items-center ${menu ? 'justify-start' : 'justify-center'} gap-5 fixed bottom-0 cursor-pointer p-5
+            ${dark ? "bg-[rgb(20,20,20)] text-white" : "bg-[rgb(221,221,2] text-black"} transition-[width] duration-1000 
             ${menu ? "w-[250px] max-[420px]:w-[200px]": "w-[70px] max-[420px]:w-[50px]"}`}>
-            <FaUserPlus className="text-2xl" />
+            <FaUserPlus className="text-2xl shrink-0" />
             {menu && <p>sign up | login</p>}
           </div>
         )}
         {token && (
-          <div className={`fixed bottom-0 cursor-pointer p-5 ${dark? "bg-[rgb(20,20,20)] text-white": "bg-[rgb(210,210,210)] text-black"}
+          <div className={`fixed bottom-0 cursor-pointer p-5 ${dark? "bg-[rgb(20,20,20)] text-white": "bg-[rgb(221,221,221)] text-black"}
           transition-[width] duration-1000 ${menu ? "w-[250px] max-[420px]:w-[200px]": "w-[70px] max-[420px]:w-[50px]"}`}>
             <div onClick={()=>{setSettings(true)}}
               className={`flex items-center ${menu ? 'justify-start' : 'justify-center'} gap-3 mb-5 box-content!`}>
