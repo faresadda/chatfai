@@ -1,10 +1,9 @@
 import { IoSend } from "react-icons/io5";
 import { useEffect, useRef, useState,useContext } from "react";
 import { TbMessagePlus } from "react-icons/tb";
-import { TiSpanner, TiThMenu } from "react-icons/ti";
+import { TiThMenu } from "react-icons/ti";
 import { MdDarkMode } from "react-icons/md";
 import { MdLightMode } from "react-icons/md";
-import { IoSearch } from "react-icons/io5";
 import logo from "../../public/logo.png";
 import { FaStopCircle } from "react-icons/fa";
 import ReactMarkdown from "react-markdown";
@@ -12,12 +11,14 @@ import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/github.css";
 import { useNavigate } from "react-router-dom";
 import { FaUserPlus } from "react-icons/fa";
-import { FaChevronDown } from "react-icons/fa";
-import { IoMdSettings } from "react-icons/io";
+import { FaAngleDown } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
 import Settings from './settings';
 import {Context} from '../main'
 import Text from './text'
+import Confirm from './confirm'
+import { IoSearch } from "react-icons/io5";
+import Search from "./search";
 
 const MarkdownRenderer = ({ text, className }) => {
   return (
@@ -54,13 +55,12 @@ async function api(message) {
 }
 
 
-export default function Ai({ answers, setAnswers,render,setRender }) {
+export default function Ai({ answers, setAnswers,render,setRender,confirm,setConfirm }) {
   const [input, setInput] = useState("");
   const [qst, setQst] = useState(false);
   const [menu, setMenu] = useState(false);
   const [dark, setDark] = useState(true);
   const [i, setI] = useState(0);
-  const [searchinput, setSearchinput] = useState("");
   const navigate = useNavigate();
 
   const [copy, setCopy] = useState(() => {
@@ -114,79 +114,60 @@ export default function Ai({ answers, setAnswers,render,setRender }) {
     setPic(arr);
    }
 }, [response]);
-  const logout = ()=>{
-    localStorage.removeItem('id')
-    localStorage.removeItem('token')
-    setToken(null)
-    setId(null)
-  }
+  
   const [settings,setSettings]=useState(false)
+  const [searchIcon,setSearchIcon]=useState(false)
   return (
     <div className="flex">
       <div
         className={`h-screen fixed flex flex-col items-center gap-5 py-5 transition-[width] duration-1000 ${menu ? "w-[250px] max-[420px]:w-[200px]": "w-[70px] max-[420px]:w-[50px]"} 
-      z-10 ${dark ? "bg-[rgb(20,20,20)] text-white":"bg-[rgb(210,210,210)] text-black"}`}>
-        <div className="flex items-center gap-5 cursor-pointer" onClick={() => {setMenu(!menu);}}>
-          <TiThMenu className="text-2xl"/>
-          {menu && <p>Menu</p>}
+      z-10 ${dark ? "bg-[rgb(20,20,20)] text-white":"bg-[rgb(221,221,221)] text-black"} p-5`}>
+        <div className={`flex items-center ${menu ? 'justify-between' : 'justify-center'} w-full`}>
+          {menu && <p className="text-[rgb(102,224,255)]">Fares Adda</p>}
+          <div className="flex items-center gap-5 cursor-pointer">
+            <TiThMenu className="text-2xl" onClick={() => {setMenu(!menu);}}/>
+            {token && menu && copy.length > 0 && <IoSearch className="text-2xl" onClick={()=>{setSearchIcon(true)}}/>}
+          </div>
         </div>
-        <div
-          onClick={() => {
-            setAnswers([]);
-            setQst(false);
-          }}
-          className="flex items-center gap-5 cursor-pointer"
-        >
-          <TbMessagePlus className="text-2xl" />
+        <div onClick={() => {setAnswers([]);setQst(false);}}
+          className={`flex ${menu ? 'justify-start' : 'justify-center'} items-center w-full gap-5 cursor-pointer`}>
+          <TbMessagePlus className="text-2xl shrink-0" />
           {menu && <p className="w-20">New chat</p>}
         </div>
         {!dark && (
-          <div
-            className="flex justify-center items-center gap-5 cursor-pointer"
-            onClick={() => {
-              setDark(true);
-            }}
-          >
-            <MdDarkMode className="text-2xl" />
+          <div className={`flex ${menu ? 'justify-start' : 'justify-center'} items-center w-full gap-5 cursor-pointer`}
+            onClick={() => {setDark(true); }}>
+            <MdDarkMode className="text-2xl shrink-0" />
             {menu && <p className="w-20">Dark mode</p>}
           </div>
         )}
         {dark && (
-          <div className="flex justify-center! items-center gap-5 cursor-pointer"
+          <div className={`flex ${menu ? 'justify-start' : 'justify-center'} items-center w-full gap-5 cursor-pointer`}
             onClick={() => {setDark(false);}}>
-            <MdLightMode className="text-2xl" />
+            <MdLightMode className="text-2xl shrink-0" />
             {menu && <p className="w-25">Light mode</p>}
           </div>
-        )}
-        {token && menu && (
-          <input type="search" placeholder="search" value={searchinput}
-            onChange={(e) => {
-              setSearchinput(() => {
-                const si = e.target.value;
-                setCopy(answers.filter((ans) => ans.user.includes(si)));
-                return si;
-              });
-            }}
-            className={`outline-none rounded-[10px] py-2 px-5 w-[90%] 
-              ${dark ? "bg-white placeholder:text-black text-black" : "bg-black placeholder:text-white text-white"}`}/>)}
 
+
+        )}
+      
         {menu && token && id && copy.length > 0 && (
-          <p onClick={() => {setCopy([]);}}
-            className="w-50 flex justify-center underline cursor-pointer">
+          <p onClick={() => {setConfirm('deleteChats')}}
+          className='flex justify-start items-center w-full gap-5 cursor-pointer underline'>
             Delete history
           </p>
         )}
         {menu && token && (
-          <div className="flex flex-col justify-start items-center overflow-y-auto w-full h-80 gap-5 py-5">
+          <div className="flex flex-col justify-start items-center overflow-y-auto w-full h-80 mx-3">
             {copy.length > 0 &&
-              copy.map((co, index) => (
+              copy.map((c, index) => (
                 <p
                   key={index}
-                  className="px-2 text-center cursor-pointer w-50"
+                  className={`${dark ? 'hover:bg-[rgb(105,105,105)]' : 'hover:bg-[rgb(238,238,238)]'} w-full hover:px-3 py-3 rounded-lg flex items-start gap-3`}
                   onClick={() => {
-                    setAnswers([...answers,{ id: co.id, user: co.user, ai: co.ai },]);
+                    setAnswers([...answers,{ id: c.id, user: c.user, ai: c.ai },]);
                     setQst(true);}}>
-                  {co.user.length > 30? co.user.slice(0, 30) + " ...": co.user}
+                  {c.user.length > 30? c.user.slice(0, 30) + " ...": c.user}
                 </p>
               ))}
           </div>
@@ -196,7 +177,7 @@ export default function Ai({ answers, setAnswers,render,setRender }) {
             onClick={() => {
               navigate("/login");
             }}
-            className={`flex items-center justify-center gap-5 fixed bottom-0 cursor-pointer py-5
+            className={`flex items-center ${menu ? 'justify-start' : 'justify-center'} gap-5 fixed bottom-0 cursor-pointer py-5
             ${dark ? "bg-[rgb(20,20,20)] text-white" : "bg-[rgb(210,210,210)] text-black"} transition-[width] duration-1000 
             ${menu ? "w-[250px] max-[420px]:w-[200px]": "w-[70px] max-[420px]:w-[50px]"}`}>
             <FaUserPlus className="text-2xl" />
@@ -204,17 +185,17 @@ export default function Ai({ answers, setAnswers,render,setRender }) {
           </div>
         )}
         {token && (
-          <div className={`fixed bottom-0 cursor-pointer py-5 ${dark? "bg-[rgb(20,20,20)] text-white": "bg-[rgb(210,210,210)] text-black"}
+          <div className={`fixed bottom-0 cursor-pointer p-5 ${dark? "bg-[rgb(20,20,20)] text-white": "bg-[rgb(210,210,210)] text-black"}
           transition-[width] duration-1000 ${menu ? "w-[250px] max-[420px]:w-[200px]": "w-[70px] max-[420px]:w-[50px]"}`}>
             <div onClick={()=>{setSettings(true)}}
-              className="flex items-center justify-center gap-3 mb-5">
-              <span className="bg-[rgb(32,177,214)] w-8 h-8 rounded-full flex justify-center items-center">
+              className={`flex items-center ${menu ? 'justify-start' : 'justify-center'} gap-3 mb-5 box-content!`}>
+              <span className="bg-[rgb(32,177,214)] w-8 h-8 rounded-full flex justify-center items-center shrink-0">
               {pic[0]!==undefined ? pic[0].slice(0,1) : ''}{pic[1]!==undefined ? pic[1].slice(0,1) : ''}</span>
-              {menu && fetchUser && <p className="w-20">{response.user.name}</p>}
-              {menu &&<FaChevronDown className="text-xl"/>}
+              {menu && fetchUser && <p>{response.user.name}</p>}
+              {menu &&<FaAngleDown className="text-xl"/>}
             </div>
-            <div className="flex items-center justify-center gap-5 text-red-500" onClick={()=>{logout();setSettings(false);setText('accountLogout')}}>
-              <MdLogout className="text-2xl"/>
+            <div className={`flex items-center ${menu ? 'justify-start' : 'justify-center'} gap-5 text-red-500`} onClick={()=>{setSettings(false);setConfirm('logOut')}}>
+              <MdLogout className="text-2xl shrink-0"/>
               {menu && <p>Log out</p>}
             </div>
           </div>
@@ -359,8 +340,11 @@ export default function Ai({ answers, setAnswers,render,setRender }) {
           </p>
         </div>
       </div>
-      {settings && token && id && <Settings dark={dark} setSettings={setSettings} render={render} setRender={setRender}/>}
+      {settings && token && id && <Settings dark={dark} setSettings={setSettings} render={render} setRender={setRender} 
+      confirm={confirm} setConfirm={setConfirm} setCopy={setCopy}/>}
       {text && <Text />}
+      {confirm && <Confirm confirm={confirm} setConfirm={setConfirm} render={render} setRender={setRender} setCopy={setCopy}/>}
+      {searchIcon && <Search dark={dark} setSearchIcon={setSearchIcon} answers={answers} setAnswers={setAnswers} setQst={setQst}/>}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import {Context} from '../main';
 import { useContext, useState,useEffect } from 'react';
-export default function Confirm({ confirm,setConfirm,render,setRender }) {
+export default function Confirm({ confirm,setConfirm,render,setRender,setCopy }) {
   const {token,setToken,id,setId,text,setText,getUser,fetchUser,response}=useContext(Context)
   useEffect(() => {
     if (token && id) {
@@ -91,12 +91,19 @@ export default function Confirm({ confirm,setConfirm,render,setRender }) {
     }
   };
   const [fetchData,setFetchData]=useState(false)
+
+  const logout = ()=>{
+    localStorage.removeItem('id')
+    localStorage.removeItem('token')
+    setToken(null)
+    setId(null)
+  }
   return (
-    <section className="bg-white rounded-2xl px-5 py-20 absolute top-[50%] left-[50%] transform -translate-x-[50%] -translate-y-[50%] w-150 text-center
+    <section className="bg-white rounded-2xl px-5 py-20 absolute top-[50%] left-[50%] transform -translate-x-[50%] -translate-y-[50%] w-150 text-center z-40
     max-[850px]:w-100 max-[550px]:w-[90%] max-[550px]:px-0">
       {confirm === "deleteChats" && (
         <form className="flex flex-col justify-center items-center gap-5 w-[80%] mx-auto!" onSubmit={(e)=>{e.preventDefault();
-          setConfirm('');setText('chatsDeleted');setTimeout(()=>{setText('')},3000)
+          setConfirm('');setCopy([]);setText('chatsDeleted');setTimeout(()=>{setText('')},3000)
         }}>
           <p className='text-black'>Do you want to delete all chats ?</p>
           <div className='flex gap-5 justify-center w-full'>
@@ -109,10 +116,7 @@ export default function Confirm({ confirm,setConfirm,render,setRender }) {
       {confirm === "deleteAccount" && (
         <form className="flex flex-col justify-center items-center gap-5 w-[80%] mx-auto!" onSubmit={(e)=>{e.preventDefault();
           deleteUser().then(()=>{console.log('success')});
-          localStorage.removeItem('token');
-          localStorage.removeItem('id');
-          setToken(null);
-          setId(null);}}>
+          logout()}}>
           <p className='text-black'>Do you want to delete your account ?</p>
           <div className='flex gap-5 justify-center w-full'>
           <button className="w-full bg-black text-white py-2 rounded-lg font-medium hover:opacity-90 transition">
@@ -155,6 +159,16 @@ export default function Confirm({ confirm,setConfirm,render,setRender }) {
           </div>
       </form>
       )}
+      {confirm==='logOut' && <form className="flex flex-col justify-center items-center gap-5 w-[80%] mx-auto!" onSubmit={(e)=>{e.preventDefault();
+        logout();setConfirm('');setText('accountLogout');setTimeout(()=>{setText('')},3000)}}>
+          <p className='text-black'>Do you want to log out ?</p>
+          <div className='flex gap-5 justify-center w-full'>
+          <button className="w-full bg-black text-white py-2 rounded-lg font-medium hover:opacity-90 transition">
+            Confirm</button>
+            <button className="w-full bg-white py-2 rounded-lg font-medium text-black border-2 border-black"  onClick={()=>{setConfirm(false)}}>Cancel</button>
+            </div>
+        </form>}
+        
     </section>
   );
 }

@@ -42,6 +42,7 @@ export default function App() {
   const [id,setId] = useState(localStorage.getItem("id"));
   const [render,setRender]=useState(false)
   const [text,setText]=useState('')
+  const [confirm,setConfirm]=useState('')
   return (
     <Context.Provider value={{ token, setToken, id, setId,text,setText,getUser,fetchUser,response }}>
     <BrowserRouter>
@@ -50,7 +51,7 @@ export default function App() {
           <Route index element={<Home setAnswers={setAnswers} />} />
           <Route
             path="/ai"
-            element={<Ai answers={answers} setAnswers={setAnswers} render={render} setRender={setRender}/>}/>
+            element={<Ai answers={answers} setAnswers={setAnswers} render={render} setRender={setRender} confirm={confirm} setConfirm={setConfirm}/>}/>
           <Route path="/login" element={<Login />} />
         </Route>
       </Routes>
