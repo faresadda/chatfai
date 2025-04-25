@@ -195,7 +195,7 @@ export default function Ai({ answers, setAnswers,render,setRender,confirm,setCon
               {menu && fetchUser && <p>{response.user.name}</p>}
               {menu &&<FaAngleDown className="text-xl"/>}
             </div>}
-            {!fetchUser && <div className="loader"></div>}
+            {!fetchUser && <div className={`loader ${menu ? 'mx-auto' : '-ml-3'}`}></div>}
             <div className={`flex items-center ${menu ? 'justify-start' : 'justify-center'} gap-5 text-red-500`} onClick={()=>{setSettings(false);setConfirm('logOut')}}>
               <MdLogout className="text-2xl shrink-0"/>
               {menu && <p>Log out</p>}
