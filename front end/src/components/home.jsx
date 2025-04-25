@@ -26,12 +26,13 @@ export default function Home({ setAnswers }) {
           <img src={logo} className="w-6 rounded-[50%]" />
         </div>
         {!token && <Link className="bg-white p-3 rounded-2xl text-black" to="/login">login | registre</Link>}
-        {token && <div className="flex items-center gap-3">
+        {token && fetchUser && <div className="flex items-center gap-3">
           <span className="bg-[rgb(32,177,214)] w-8 h-8 rounded-full flex justify-center items-center">
               {pic[0]!==undefined ? pic[0].slice(0,1) : ''}{pic[1]!==undefined ? pic[1].slice(0,1) : ''}
           </span>
-          {fetchUser && <p>{response.user.name}</p>}
+          <p>{response.user.name}</p>
           </div>} 
+        {token && !fetchUser && <div className="loader"></div>}
       </div>
       <div className="flex flex-col justify-center items-center gap-5">
         <h1 className="text-7xl font-bold tracking-[10px] max-[580px]:text-5xl">

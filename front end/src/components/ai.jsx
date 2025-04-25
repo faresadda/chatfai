@@ -186,15 +186,16 @@ export default function Ai({ answers, setAnswers,render,setRender,confirm,setCon
           </div>
         )}
         {token && (
-          <div className={`fixed bottom-0 cursor-pointer p-5 ${dark? "bg-[rgb(20,20,20)] text-white": "bg-[rgb(221,221,221)] text-black"}
+           <div className={`fixed bottom-0 cursor-pointer p-5 ${dark? "bg-[rgb(20,20,20)] text-white": "bg-[rgb(221,221,221)] text-black"}
           transition-[width] duration-1000 ${menu ? "w-[250px] max-[420px]:w-[200px]": "w-[70px] max-[420px]:w-[50px]"}`}>
-            <div onClick={()=>{setSettings(true)}}
+            {fetchUser && <div onClick={()=>{setSettings(true)}}
               className={`flex items-center ${menu ? 'justify-start' : 'justify-center'} gap-3 mb-5 box-content!`}>
               <span className="bg-[rgb(32,177,214)] w-8 h-8 rounded-full flex justify-center items-center shrink-0">
               {pic[0]!==undefined ? pic[0].slice(0,1) : ''}{pic[1]!==undefined ? pic[1].slice(0,1) : ''}</span>
               {menu && fetchUser && <p>{response.user.name}</p>}
               {menu &&<FaAngleDown className="text-xl"/>}
-            </div>
+            </div>}
+            {!fetchUser && <div className="loader"></div>}
             <div className={`flex items-center ${menu ? 'justify-start' : 'justify-center'} gap-5 text-red-500`} onClick={()=>{setSettings(false);setConfirm('logOut')}}>
               <MdLogout className="text-2xl shrink-0"/>
               {menu && <p>Log out</p>}

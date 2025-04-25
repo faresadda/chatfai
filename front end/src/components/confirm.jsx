@@ -131,8 +131,8 @@ export default function Confirm({ confirm,setConfirm,render,setRender,setCopy })
             updateProfile().then(()=>{return null});
           }
         }}>
-        <input type='text' className="w-full bg-white py-2 rounded-lg font-medium text-black border-2 border-black px-8" value={name} onChange={(e)=>{setName(e.target.value)}}/>
-        <input type='email' className="w-full bg-white py-2 rounded-lg font-medium text-black border-2 border-black px-8" value={email} onChange={(e)=>{setEmail(e.target.value)}}/>
+        <input type='text' className="w-full bg-white py-2 rounded-lg font-medium text-black border-2 border-black px-4" value={name} onChange={(e)=>{setName(e.target.value)}}/>
+        <input type='email' className="w-full bg-white py-2 rounded-lg font-medium text-black border-2 border-black px-4" value={email} onChange={(e)=>{setEmail(e.target.value)}}/>
         <div className='flex gap-5 justify-center w-full'>
         <button className="w-full bg-black text-white py-2 rounded-lg font-medium hover:opacity-90 transition" >
           Confirm</button>
@@ -146,9 +146,9 @@ export default function Confirm({ confirm,setConfirm,render,setRender,setCopy })
             updatePassword().then(()=>{return null});
           }
         }}>
-        <input type='password' className="w-full bg-white py-2 rounded-lg font-medium text-black border-2 border-black px-8" placeholder='Old password' 
+        <input type='password' className="w-full bg-white py-2 rounded-lg font-medium text-black border-2 border-black px-4" placeholder='Old password' 
         value={password1} onChange={(e)=>{setPassword1(e.target.value)}}/>
-        <input type='password' className="w-full bg-white py-2 rounded-lg font-medium text-black border-2 border-black px-8" placeholder='New password' 
+        <input type='password' className="w-full bg-white py-2 rounded-lg font-medium text-black border-2 border-black px-4" placeholder='New password' 
         value={password2} onChange={(e)=>{setPassword2(e.target.value)}}/>
         {fetchData && <div className="w-full flex flex-col justify-center">{err.map((e,index)=>{
               return <p key={index} className="text-red-500 text-center">{e.msg}</p>})}</div>}
