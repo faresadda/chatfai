@@ -39,15 +39,14 @@ body{
 }
 
 .loader {
-  width: 2rem;
-  height: 2rem;
+  width: 1rem;
+  height: 1rem;
   border-radius: 50%;
   box-sizing: border-box;
-  border-top: 8px solid #fff;
-  border-left: 8px solid #fff;
-  border-right: 8px solid #ff00;
+  border-top: 4px solid #fff;
+  border-left: 4px solid #fff;
+  border-right: 4px solid #ff00;
   animation: loader .7s infinite linear;
-  margin-bottom: 1.25rem;
 }
 
 @keyframes loader {
@@ -55,4 +54,14 @@ body{
     transform: rotate(360deg);
   }
 }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95);}
+  to { opacity: 1; transform: scale(1);}
+}
+.animate-fadeIn {
+  animation: fadeIn 0.4s ease;
+}
+
+
 

@@ -32,7 +32,7 @@ const registre = asyncHandler(async (req,res)=>{
 
     // create verification code
     const verificationCode = crypto.randomInt(10000, 99999);
-    await sendEmail({email:email,subject:'verification code',message:`Your account verification code is ${verificationCode}`})
+    await sendEmail({email:email,subject:'verification code',message:`Your verification code is ${verificationCode}`})
 
     const newUser = new User({
         name,
@@ -60,7 +60,6 @@ const verifyEmail = asyncHandler(async (req, res) => {
     }
   
     user.isVerified = true;
-    user.verificationCode = null;
     await user.save();
   
     res.status(200).json(appData.createData('email verified successfully',user));
@@ -123,28 +122,62 @@ const accountRecovery = asyncHandler(async (req,res)=>{
     }
     const verificationCode = crypto.randomInt(10000, 99999);
     user = await User.findOneAndUpdate({email:email},{$set:{verificationCode:verificationCode}},{ new: true })
-    await sendEmail({email:email,subject:'verification code',message:`Your account verification code is ${verificationCode}`})
+    await sendEmail({email:email,subject:'verification code',message:`Your verification code is ${verificationCode}`})
     user = await User.findOne({email:email},{_id:1})
     res.status(200).json(appData.createData('verification code sent successfully',user))
 })
 
 // new password
 const newPassword = asyncHandler(async(req,res)=>{
-    const password=req.body.password;
+    const {password,code}=req.body;
     const id=req.params.id
+    const user = await User.findById(id,{password:0})
+    if(user.verificationCode != code){
+        return res.status(400).json(appError.createError(400,'Invalid verification code'))
+    }
     const errors=validationResult(req)
-    if(!errors.isEmpty()){return res.status(401).json(errors.array())}
+    if(!errors.isEmpty()){
+        return res.status(400).json(appError.createError(400,errors.array()))
+    }
     const hash = await bcrypt.hash(password,10)
     const update = await User.findByIdAndUpdate(id,{$set:{password:hash}},{new:true})
-    res.status(200).json(appData.createData('password updated successfully',null))
+    res.status(200).json(appData.createData('password updated successfully',user))
 })
 
 const resendCode = asyncHandler ( async (req,res)=>{
     const id=req.params.id
     const verificationCode=crypto.randomInt(10000,99999)
     const update = await User.findByIdAndUpdate(id,{$set:{verificationCode:verificationCode}},{new:true})
-    await sendEmail({email:update.email,subject:'verification code',message:`Your account verification code is ${verificationCode}`})
+    await sendEmail({email:update.email,subject:'verification code',message:`Your verification code is ${verificationCode}`})
     res.status(200).json(appData.createData('verification code sent successfully',null))
+})
+
+const addChat = asyncHandler( async (req,res) => {
+    const chats = req.body.chats;
+    const id = req.params.id;
+    const update = await User.findByIdAndUpdate(id, {$push: {chats: chats}}, {new: true});
+    if (!update) {
+        return res.status(404).json(appError.createError(404, 'User not found'));
+    }
+    res.status(200).json(appData.createData('Chat added successfully', update));
+})
+
+const getChats = asyncHandler( async (req,res) => {
+    const id = req.params.id;
+    const user = await User.findById(id, {chats: 1});
+    if (!user) {
+        return res.status(404).json(appError.createError(404, 'User not found'));
+    }
+    res.status(200).json(appData.createData('Chats fetched successfully', user.chats));
+})
+
+const deleteChats = asyncHandler( async (req,res) => {
+    const id = req.params.id;
+    const user = await User.findByIdAndUpdate(id, {$set: {chats: []}}, {new: true});
+    if (!user) {
+        return res.status(404).json(appError.createError(404, 'User not found'));
+    }
+    res.status(200).json(appData.createData('Chats deleted successfully', user.chats));
 })
 
 module.exports = {
@@ -158,4 +191,8 @@ module.exports = {
     accountRecovery,
     newPassword,
     resendCode,
+
+    addChat,
+    getChats,
+    deleteChats
 }

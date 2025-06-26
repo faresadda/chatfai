@@ -2,7 +2,7 @@ const { check } = require("express-validator");
 const passwordValidator = [
   check("password")
     .notEmpty()
-    .withMessage("gender is required")
+    .withMessage("password is required")
     .isLength({ min: 8 })
     .withMessage("password is too short")
     .custom(value => {
