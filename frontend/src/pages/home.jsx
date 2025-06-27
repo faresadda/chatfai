@@ -33,6 +33,7 @@ export default function Home() {
       getUser();
     }
   }, [token, id]);
+  
   return (
     <div className="bg-[rgb(30,30,30)] h-screen flex flex-col justify-start items-center gap-20 text-white max-[387px]:gap-15">
       <div className="flex items-center justify-between w-full px-10 pt-10 max-[400px]:px-5">
