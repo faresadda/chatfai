@@ -243,11 +243,11 @@ export default function Chat() {
         )}
 
 
-
+        {token && id && <div className="w-full">
         {chats ?
-        <div className="w-full mr-5">
+        <div className="w-full">
           {menu && token && (
-          <div className="flex flex-col justify-start items-center overflow-y-auto w-full h-80 mx-3">
+          <div className="flex flex-col justify-start items-center overflow-y-auto w-full h-80">
             {chats.length > 0 &&
               chats.map((c, index) => (
                 <p
@@ -272,9 +272,10 @@ export default function Chat() {
           </div>
         )}
         </div>
-        : <div className={`loader mb-5 ${!menu ? "mx-auto" : "-ml-3"}`}></div>
+        : <div className="loader mb-5 mx-auto"></div>
         }
-
+        </div>
+        }
 
 
         {!token && (
